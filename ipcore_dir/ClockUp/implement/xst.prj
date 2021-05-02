@@ -1,0 +1,2 @@
+vhdl work ../../ClockUp.vhd
+vhdl work ../example_design/ClockUp_exdes.vhd

@@ -1,0 +1,9 @@
+run
+-ifmt MIXED
+-top ClockUp_exdes
+-p xc6slx4-cpg196-2
+-ifn xst.prj
+-ofn ClockUp_exdes
+-keep_hierarchy soft 
+-equivalent_register_removal no 
+-max_fanout 65535

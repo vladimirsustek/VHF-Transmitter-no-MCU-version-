@@ -1,0 +1,15 @@
+# Output products list for <DDS_LF>
+DDS_LF.asy
+DDS_LF.gise
+DDS_LF.ngc
+DDS_LF.sym
+DDS_LF.vhd
+DDS_LF.vho
+DDS_LF.xco
+DDS_LF.xise
+DDS_LF\doc\dds_compiler_v4_0_vinfo.html
+DDS_LF\doc\dds_ds558.pdf
+DDS_LF_flist.txt
+DDS_LF_readme.txt
+DDS_LF_xmdf.tcl
+_xmsgs\pn_parser.xmsgs

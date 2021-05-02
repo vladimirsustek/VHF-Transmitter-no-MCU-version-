@@ -1,0 +1,277 @@
+--------------------------------------------------------------------------------
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.NUMERIC_STD.ALL;
+library UNISIM;
+use UNISIM.VComponents.all;
+--------------------------------------------------------------------------------
+entity fm_transmitter is
+  port(
+    CLK : in    std_logic;
+	 CLK_LFC : in std_logic;
+	 	 
+	 BTN_0 : in std_logic;
+	 BTN_1 : in std_logic;
+	 
+	 LEDS : out std_logic_vector(3 downto 0);
+
+	 AD_NCS : out std_logic;
+	 AD_SDI : in std_logic;
+	 AD_SCLK : out std_logic;
+	 
+	 DAC0_CLK : out std_logic;
+	 DAC0_DATA : out std_logic_vector(9 downto 0);
+	 
+	 DAC1_NLDAC : out std_logic;
+	 DAC1_SCLK : out std_logic;
+	 DAC1_NCS : out std_logic;
+	 DAC1_MOSI : out std_logic;
+	 DAC1_MISO : in std_logic;
+	 
+	 BEEP_LOW : out std_logic;
+	 BEEP_NRST : in std_logic );
+	 
+end fm_transmitter;
+--------------------------------------------------------------------------------
+ architecture Behavioral of fm_transmitter is
+--------------------------------------------------------------------------------
+	
+	COMPONENT clk_enabler
+	PORT(
+		clk_i : IN std_logic;
+	   hf_clk_i : IN std_logic;
+		reset_i : IN std_logic;          
+		clk_en_10Hz_o : OUT std_logic;
+		clk_en_230400Hz_o : OUT std_logic;
+		clk_en_22kHz_o : OUT std_logic
+		);
+	END COMPONENT;
+	
+	COMPONENT adc_interface
+	PORT(
+		clk_i : IN std_logic;
+		clk_en_i : IN std_logic;
+		clk_lfc_i : IN std_logic;
+		miso_i : IN std_logic;
+		mosi_o : OUT std_logic;
+		sclk_o : OUT std_logic;
+		ncs_o : OUT std_logic;
+		voltage_o : OUT std_logic_vector(15 downto 0)
+		);
+	END COMPONENT;
+	
+	COMPONENT da1_interface
+	PORT(
+		clk_i : IN std_logic;
+		reset_i : IN std_logic;
+		miso_i : IN std_logic;
+		voltage_i : IN std_logic_vector(15 downto 0);          
+		mosi_o : OUT std_logic;
+		sclk_o : OUT std_logic;
+		ncs_o : OUT std_logic;
+		nldac_o : OUT std_logic
+		);
+	END COMPONENT;
+	
+	COMPONENT DDS_RF
+	  PORT (
+		 ce : IN STD_LOGIC;
+		 clk : IN STD_LOGIC;
+		 pinc_in : IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+		 rdy : OUT STD_LOGIC;
+		 sine : OUT STD_LOGIC_VECTOR(9 DOWNTO 0)
+	  );
+	END COMPONENT;
+
+	component ClockUp
+	port
+	 (-- Clock in ports
+	  CLK_IN1           : in     std_logic;
+	  -- Clock out ports
+	  CLK_OUT1          : out    std_logic;
+	  CLK_OUT2          : out    std_logic;
+	  -- Status and control signals
+	  RESET             : in     std_logic;
+	  LOCKED            : out    std_logic
+	 );
+	end component;
+	
+	COMPONENT keyboard_interface
+	PORT(
+		clk_i : IN std_logic;
+		clk_lfc_i : IN std_logic;
+		clk_22kHz : IN std_logic;
+		clk_10Hz : IN std_logic;
+		btn_0_i : IN std_logic;
+		btn_1_i : IN std_logic;
+		reset_i : IN std_logic;          
+		num_0_o : OUT std_logic_vector(15 downto 0);
+		num_01_o : out  STD_LOGIC_VECTOR (24 downto 0);
+		num_1_o : OUT std_logic_vector(15 downto 0);
+		num_2_o : OUT std_logic_vector(15 downto 0);
+		state_o : OUT std_logic_vector(1 downto 0)
+		);
+	END COMPONENT;
+	
+	COMPONENT DDS_LF
+	  PORT (
+		 ce : IN STD_LOGIC;
+		 clk : IN STD_LOGIC;
+		 pinc_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+		 rdy : OUT STD_LOGIC;
+		 sine : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+	  );
+	END COMPONENT;
+  ------------------------------------------------------------------------------
+  
+  signal sigCentralReset : std_logic := '0';
+  
+  signal sigDDSphInc : std_logic_vector(24 downto 0) := (others => '0');
+  signal sigDDSphIncPreset : std_logic_vector(24 downto 0) := (others => '0');
+  signal sigDDSfreq : std_logic_vector(15 downto 0) := (others => '0');
+  signal sigManualVoltage : std_logic_vector(15 downto 0) := (others => '0');
+  signal sigDisplayedVoltage : std_logic_vector(15 downto 0) :=(others => '0');
+  
+  signal sigCLKBuff : std_logic := '0';
+  signal sigClkHF : std_logic := '0';
+  signal sigNotClkHF : std_logic := '0';
+  
+  signal sigKeyboardInterfaceState : std_logic_vector(1 downto 0) := (others => '0');
+  signal sigADC_voltage : std_logic_vector(15 downto 0) := (others => '0');
+  signal sigDACinput : std_logic_vector(15 downto 0) := (others => '0');
+  
+  signal sig10Hz : std_logic := '0';
+  signal sig230400Hz : std_logic := '0';
+  signal sig22kHz : std_logic := '0';
+  
+  signal sigDDSBeep : std_logic_vector(11 downto 0) := (others => '0');
+  signal sigDDSBeepInc : std_logic_vector(15 downto 0) := X"0001";
+    
+  type adjust_type is (NONE, DDS_PHINC, DAC_1_VOLT);
+  
+  signal sigAdjustVariable : adjust_type := NONE;
+begin
+--------------------------------------------------------------------------------
+  
+	sigNotClkHF <= not(sigClkHF);
+	LEDS(1 downto 0) <= sigKeyboardInterfaceState;
+	LEDS(2) <= not(CLK_LFC);
+	LEDS(3) <= CLK_LFC;
+	BEEP_LOW <= '0';
+	
+	toggle_frequency : process(CLK_LFC)
+	begin
+		if rising_edge(CLK_LFC) then
+			if sigDDSBeepInc /= X"0040" then
+				sigDDSBeepInc <= std_logic_vector(shift_left(unsigned(sigDDSBeepInc), 1));
+			else
+				sigDDSBeepInc <= X"0001";
+			end if;
+		end if;
+	end process;
+	
+	sigDisplayedVoltage <= std_logic_vector(shift_right(unsigned(sigManualVoltage), 1) + shift_right(unsigned(sigManualVoltage), 2) + shift_right(unsigned(sigManualVoltage), 7) + shift_right(unsigned(sigManualVoltage), 8) + shift_right(unsigned(sigManualVoltage), 10) + shift_right(unsigned(sigManualVoltage), 11));
+	
+	choose_audio : process(sigCLKBuff, BEEP_NRST)
+	begin
+		if BEEP_NRST = '1' then
+			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADC_voltage),4) + shift_left(unsigned(sigADC_voltage),2) + 8);
+		else
+			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + unsigned(sigDDSBeep) + 8);
+		end if;
+	end process;
+	
+	  CLK_conversion : ClockUp
+  port map
+   (-- Clock in ports
+    CLK_IN1 => CLK,
+    -- Clock out ports
+    CLK_OUT1 => sigClkHF,
+    CLK_OUT2 => sigCLKBuff,
+    -- Status and control signals
+    RESET  => sigCentralReset,
+    LOCKED => open);
+	 
+	 Inst_clk_enabler: clk_enabler PORT MAP(
+	 clk_i => sigCLKBuff,
+	 hf_clk_i => sigClkHF,
+	 reset_i => sigCentralReset,
+	 clk_en_10Hz_o => sig10Hz,
+	 clk_en_230400Hz_o => sig230400Hz,
+	 clk_en_22kHz_o => sig22kHz
+	);
+	
+	DAC0_DATA_O : DDS_RF
+  PORT MAP (
+    ce => not(sigCentralReset),
+    clk => sigClkHF,
+    pinc_in => sigDDSphInc,
+    rdy => open,
+    sine => DAC0_DATA
+  );
+  
+	DA0_CLK_O : ODDR2
+	generic map(
+	  DDR_ALIGNMENT => "NONE",
+	  INIT => '0',
+	  SRTYPE => "SYNC")
+	port map (
+	  Q => DAC0_CLK,
+	  C0 => sigClkHF,
+	  C1 => sigNotClkHF,
+	  CE => '1',
+	  D0 => '1',
+	  D1 => '0',
+	  R => sigCentralReset,
+	  S =>'0'
+	);
+	
+	Inst_adc_interface: adc_interface PORT MAP(
+		clk_i => sigCLKBuff,
+		clk_en_i => '1',
+		clk_lfc_i => '1',
+		miso_i => AD_SDI,
+		mosi_o => open,
+		sclk_o => AD_SCLK,
+		ncs_o => AD_NCS,
+		voltage_o => sigADC_voltage
+	);
+	
+		Inst_da1_interface: da1_interface PORT MAP(
+		clk_i => sigCLKBuff,
+		reset_i => sigCentralReset,
+		miso_i => DAC1_MISO,
+		voltage_i => sigManualVoltage,
+		mosi_o => DAC1_MOSI,
+		sclk_o => DAC1_SCLK,
+		ncs_o => DAC1_NCS,
+		nldac_o => DAC1_NLDAC
+	);
+	
+	Inst_keyboard_interface: keyboard_interface PORT MAP(
+		clk_i => sigCLKBuff,
+		clk_lfc_i => CLK_LFC,
+		clk_22kHz => sig22kHz,
+		clk_10Hz => sig10Hz,
+		btn_0_i => BTN_0,
+		btn_1_i => BTN_1,
+		reset_i => sigCentralReset,
+		num_0_o => sigDDSfreq,
+		num_01_o => sigDDSphIncPreset,
+		num_1_o => sigManualVoltage,
+		num_2_o => open,
+		state_o => sigKeyboardInterfaceState 
+	);
+		
+	DemoBeepSound : DDS_LF
+  PORT MAP (
+    ce => not(sigCentralReset),
+    clk => sigCLKBuff,
+    pinc_in => sigDDSBeepInc,
+    rdy => open,
+    sine => sigDDSBeep
+  );
+  
+--------------------------------------------------------------------------------
+end Behavioral;
+--------------------------------------------------------------------------------
