@@ -86,9 +86,7 @@ begin
 			end if;
 		end if;
 	end process;
-	
-	--debug_uart_send : process(clk_i, clk_lfc, clk_en)
-  
+	  
 	Inst_spi_master_v1_2: spi_master_v1
 		GENERIC MAP(
 		width => 16,
@@ -107,7 +105,6 @@ begin
 		data_o => sigSPI_Data_d,
 		rdy_o => sigSPI_Rdy
 	);
-	--voltage_o <= STD_LOGIC_VECTOR(shift_left(unsigned(sigSPI_Data_q), 3) + shift_left(unsigned(sigSPI_Data_q), 2) + unsigned(sigSPI_Data_q));
 	voltage_o <= sigSPI_Data_q;
 
 end Behavioral;

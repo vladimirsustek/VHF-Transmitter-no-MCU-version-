@@ -78,7 +78,7 @@ signal sigIFstate : iterface_state := IDLE;
 signal sigTransactionDone : std_logic := '0';
 signal sigCmd : std_logic_vector(23 downto 0) := (others => '0');
 signal sigPrevVoltage : std_logic_vector(15 downto 0) := (others => '0');
-signal sigInitialCondition : std_logic := '0';
+signal sigInitialCondition : std_logic := '1';
 signal sigRrdy : std_logic := '0';
 signal sigWRrdy_q : std_logic := '0';
 signal sigWRrdy_d : std_logic := '0';
@@ -106,9 +106,14 @@ begin
 		rdy_o => sigRrdy
 	);
 	
-	command_selector : process(clk_i)
+	command_selector : process(clk_i, reset_i)
 	begin
-	    if rising_edge(clk_i) and sigTransactionDone = '1' then
+		 if reset_i = '1' then
+			sigCmd <= (others => '0');
+			sigPrevVoltage <= (others => '0');
+			sigIFstate <= IDLE;
+			sigNLDAC <= '1';
+	    elsif rising_edge(clk_i) and sigTransactionDone = '1' then
 		     case sigIFstate is
 			      when IDLE =>
 						 sigCmd <= conSetupControl;
@@ -138,18 +143,23 @@ begin
 		 end if;
 	end process;
 
-	spi_control : process(clk_i)
+	spi_control : process(clk_i, reset_i)
 	begin
-		if rising_edge(clk_i) then
+		if reset_i = '1' then
+			sigTransactionDone <= '0';
+			sigWRrdy_d <= '0';
+			sigRst_d <= '0';
+			sigInitialCondition <= '1';
+		elsif rising_edge(clk_i) then
 			-- reseting the device
 			if sigIFstate = READY then
 				if sigPrevVoltage /= voltage_i then
 					sigTransactionDone <= '1';
 				end if;
-			elsif sigRrdy = '1' or sigInitialCondition = '0' then
+			elsif sigRrdy = '1' or sigInitialCondition = '1' then
 				sigRst_d <= '1';
 				sigTransactionDone <= '1';
-				sigInitialCondition <= '1';
+				sigInitialCondition <= '0';
 			-- initiating the transmission
 			elsif sigRst_q = '1' then
 				sigRst_d <= '0';
