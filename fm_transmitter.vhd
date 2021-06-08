@@ -15,9 +15,13 @@ entity fm_transmitter is
 	 
 	 LEDS : out std_logic_vector(3 downto 0);
 
-	 AD_NCS : out std_logic;
-	 AD_SDI : in std_logic;
-	 AD_SCLK : out std_logic;
+	 ADC0_NCS : out std_logic;
+	 ADC0_SDI : in std_logic;
+	 ADC0_SCLK : out std_logic;
+
+	 ADC1_NCS : out std_logic;
+	 ADC1_SDI : in std_logic;
+	 ADC1_SCLK : out std_logic;
 	 
 	 DAC0_CLK : out std_logic;
 	 DAC0_DATA : out std_logic_vector(9 downto 0);
@@ -137,7 +141,8 @@ end fm_transmitter;
   signal sigNotClkHF : std_logic := '0';
   
   signal sigKeyboardInterfaceState : std_logic_vector(1 downto 0) := (others => '0');
-  signal sigADC_voltage : std_logic_vector(15 downto 0) := (others => '0');
+  signal sigADCaudio_0 : std_logic_vector(15 downto 0) := (others => '0');
+  signal sigADCaudio_1 : std_logic_vector(15 downto 0) := (others => '0');
   signal sigDACinput : std_logic_vector(15 downto 0) := (others => '0');
   
   signal sig10Hz : std_logic := '0';
@@ -175,9 +180,10 @@ begin
 	choose_audio : process(sigCLKBuff, BEEP_NRST)
 	begin
 		if BEEP_NRST = '1' then
-			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADC_voltage),4) + shift_left(unsigned(sigADC_voltage),2) + 8);
+			--sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 5) + 8);
+			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADCaudio_0),4) + shift_left(unsigned(sigADCaudio_0),2) + 8);
 		else
-			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + unsigned(sigDDSBeep) + 8);
+			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADCaudio_1),4) + shift_left(unsigned(sigADCaudio_1),2) + 8);
 		end if;
 	end process;
 	
@@ -226,17 +232,27 @@ begin
 	  S =>'0'
 	);
 	
-	Inst_adc_interface: adc_interface PORT MAP(
+	main_audio_adc: adc_interface PORT MAP(
 		clk_i => sigCLKBuff,
 		clk_en_i => '1',
 		clk_lfc_i => '1',
-		miso_i => AD_SDI,
+		miso_i => ADC0_SDI,
 		mosi_o => open,
-		sclk_o => AD_SCLK,
-		ncs_o => AD_NCS,
-		voltage_o => sigADC_voltage
+		sclk_o => ADC0_SCLK,
+		ncs_o => ADC0_NCS,
+		voltage_o => sigADCaudio_0
 	);
 	
+	second_audio_adc: adc_interface PORT MAP(
+		clk_i => sigCLKBuff,
+		clk_en_i => '1',
+		clk_lfc_i => '1',
+		miso_i => ADC1_SDI,
+		mosi_o => open,
+		sclk_o => ADC1_SCLK,
+		ncs_o => ADC1_NCS,
+		voltage_o => sigADCaudio_1
+	);	
 		Inst_da1_interface: da1_interface PORT MAP(
 		clk_i => sigCLKBuff,
 		reset_i => sigCentralReset,

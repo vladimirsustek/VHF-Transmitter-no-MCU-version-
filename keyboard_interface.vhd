@@ -72,16 +72,18 @@ signal sigBtn_1_dbc : std_logic := '0';
 
 signal sigPrevCLK_LFC : std_logic := '0';
 
-signal sigNum_0 : std_logic_vector(15 downto 0) := X"0834";
+-- default x083E equal to 2110MHz for signalizing
+signal sigNum_0 : std_logic_vector(15 downto 0) := X"083E";
 signal sigNum_1 : std_logic_vector(15 downto 0) := X"1FFF";
 
-signal sigNum_01 : std_logic_vector(24 downto 0) := "0010110011001100110011001";
+-- default phase increment equal to 21.10MHz when 120MHz clock and 25 phase (3.57Hz/LSB)
+signal sigNum_01 : std_logic_vector(24 downto 0) := "0010110100000011010110101";
+
 
 signal sigChangeStCnt : std_logic_vector(3 downto 0) := (others => '0');
 
 signal sigState : std_logic_vector(1 downto 0) := "11";
 
-  
 begin
 	
 	counter_LFC : process(clk_i)
