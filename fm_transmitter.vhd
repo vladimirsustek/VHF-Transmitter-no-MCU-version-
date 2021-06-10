@@ -32,8 +32,7 @@ entity fm_transmitter is
 	 DAC1_MOSI : out std_logic;
 	 DAC1_MISO : in std_logic;
 	 
-	 BEEP_LOW : out std_logic;
-	 BEEP_NRST : in std_logic );
+	 SYS_NRST : in std_logic);
 	 
 end fm_transmitter;
 --------------------------------------------------------------------------------
@@ -134,7 +133,6 @@ end fm_transmitter;
   signal sigDDSphIncPreset : std_logic_vector(24 downto 0) := (others => '0');
   signal sigDDSfreq : std_logic_vector(15 downto 0) := (others => '0');
   signal sigManualVoltage : std_logic_vector(15 downto 0) := (others => '0');
-  signal sigDisplayedVoltage : std_logic_vector(15 downto 0) :=(others => '0');
   
   signal sigCLKBuff : std_logic := '0';
   signal sigClkHF : std_logic := '0';
@@ -162,7 +160,6 @@ begin
 	LEDS(1 downto 0) <= sigKeyboardInterfaceState;
 	LEDS(2) <= not(CLK_LFC);
 	LEDS(3) <= CLK_LFC;
-	BEEP_LOW <= '0';
 	
 	toggle_frequency : process(CLK_LFC)
 	begin
@@ -175,17 +172,8 @@ begin
 		end if;
 	end process;
 	
-	sigDisplayedVoltage <= std_logic_vector(shift_right(unsigned(sigManualVoltage), 1) + shift_right(unsigned(sigManualVoltage), 2) + shift_right(unsigned(sigManualVoltage), 7) + shift_right(unsigned(sigManualVoltage), 8) + shift_right(unsigned(sigManualVoltage), 10) + shift_right(unsigned(sigManualVoltage), 11));
-	
-	choose_audio : process(sigCLKBuff, BEEP_NRST)
-	begin
-		if BEEP_NRST = '1' then
-			--sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 5) + 8);
-			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADCaudio_0),4) + shift_left(unsigned(sigADCaudio_0),2) + 8);
-		else
-			sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left(unsigned(sigADCaudio_1),4) + shift_left(unsigned(sigADCaudio_1),2) + 8);
-		end if;
-	end process;
+	sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 3) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 1) + 8);
+
 	
 	  CLK_conversion : ClockUp
   port map
