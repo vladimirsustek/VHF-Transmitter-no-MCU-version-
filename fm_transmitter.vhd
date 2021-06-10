@@ -53,9 +53,9 @@ end fm_transmitter;
 	COMPONENT adc_interface
 	PORT(
 		clk_i : IN std_logic;
+		reset_i : IN std_logic;
 		clk_en_i : IN std_logic;
-		clk_lfc_i : IN std_logic;
-		miso_i : IN std_logic;
+		miso_i : IN std_logic;          
 		mosi_o : OUT std_logic;
 		sclk_o : OUT std_logic;
 		ncs_o : OUT std_logic;
@@ -108,10 +108,8 @@ end fm_transmitter;
 		btn_0_i : IN std_logic;
 		btn_1_i : IN std_logic;
 		reset_i : IN std_logic;          
-		num_0_o : OUT std_logic_vector(15 downto 0);
-		num_01_o : out  STD_LOGIC_VECTOR (24 downto 0);
+		num_0_o : out  STD_LOGIC_VECTOR (24 downto 0);
 		num_1_o : OUT std_logic_vector(15 downto 0);
-		num_2_o : OUT std_logic_vector(15 downto 0);
 		state_o : OUT std_logic_vector(1 downto 0)
 		);
 	END COMPONENT;
@@ -131,7 +129,6 @@ end fm_transmitter;
   
   signal sigDDSphInc : std_logic_vector(24 downto 0) := (others => '0');
   signal sigDDSphIncPreset : std_logic_vector(24 downto 0) := (others => '0');
-  signal sigDDSfreq : std_logic_vector(15 downto 0) := (others => '0');
   signal sigManualVoltage : std_logic_vector(15 downto 0) := (others => '0');
   
   signal sigCLKBuff : std_logic := '0';
@@ -155,11 +152,21 @@ end fm_transmitter;
   signal sigAdjustVariable : adjust_type := NONE;
 begin
 --------------------------------------------------------------------------------
-  
+	
 	sigNotClkHF <= not(sigClkHF);
-	LEDS(1 downto 0) <= sigKeyboardInterfaceState;
-	LEDS(2) <= not(CLK_LFC);
-	LEDS(3) <= CLK_LFC;
+	sigCentralReset <= SYS_NRST;
+	
+	device_state : process(SYS_NRST, CLK_LFC)
+	begin
+		if SYS_NRST = '1' then
+			LEDS(2) <= '0';
+			LEDS(3) <= '0';
+		else
+			LEDS(2) <= not(CLK_LFC);
+			LEDS(3) <= CLK_LFC;
+		end if;
+	end process;
+	LEDS(1 downto 0) <= sigKeyboardInterfaceState;		
 	
 	toggle_frequency : process(CLK_LFC)
 	begin
@@ -222,8 +229,8 @@ begin
 	
 	main_audio_adc: adc_interface PORT MAP(
 		clk_i => sigCLKBuff,
+		reset_i => sigCentralReset,
 		clk_en_i => '1',
-		clk_lfc_i => '1',
 		miso_i => ADC0_SDI,
 		mosi_o => open,
 		sclk_o => ADC0_SCLK,
@@ -233,8 +240,8 @@ begin
 	
 	second_audio_adc: adc_interface PORT MAP(
 		clk_i => sigCLKBuff,
+		reset_i => sigCentralReset,
 		clk_en_i => '1',
-		clk_lfc_i => '1',
 		miso_i => ADC1_SDI,
 		mosi_o => open,
 		sclk_o => ADC1_SCLK,
@@ -260,10 +267,8 @@ begin
 		btn_0_i => BTN_0,
 		btn_1_i => BTN_1,
 		reset_i => sigCentralReset,
-		num_0_o => sigDDSfreq,
-		num_01_o => sigDDSphIncPreset,
+		num_0_o => sigDDSphIncPreset,
 		num_1_o => sigManualVoltage,
-		num_2_o => open,
 		state_o => sigKeyboardInterfaceState 
 	);
 		

@@ -37,10 +37,8 @@ entity keyboard_interface is
            btn_0_i : in  STD_LOGIC;
            btn_1_i : in  STD_LOGIC;
            reset_i : in  STD_LOGIC;
-           num_0_o : out  STD_LOGIC_VECTOR (15 downto 0);
-           num_01_o : out  STD_LOGIC_VECTOR (24 downto 0);
+           num_0_o : out  STD_LOGIC_VECTOR (24 downto 0);
            num_1_o : out  STD_LOGIC_VECTOR (15 downto 0);
-           num_2_o : out  STD_LOGIC_VECTOR (15 downto 0);
            state_o : out  STD_LOGIC_VECTOR (1 downto 0));
 end keyboard_interface;
 
@@ -72,13 +70,10 @@ signal sigBtn_1_dbc : std_logic := '0';
 
 signal sigPrevCLK_LFC : std_logic := '0';
 
--- default x083E equal to 2110MHz for signalizing
-signal sigNum_0 : std_logic_vector(15 downto 0) := X"083E";
-signal sigNum_1 : std_logic_vector(15 downto 0) := X"1FFF";
 
 -- default phase increment equal to 21.10MHz when 120MHz clock and 25 phase (3.57Hz/LSB)
-signal sigNum_01 : std_logic_vector(24 downto 0) := "0010110100000011010110101";
-
+signal sigNum_0 : std_logic_vector(24 downto 0) := "0010110100000011010110101";
+signal sigNum_1 : std_logic_vector(15 downto 0) := X"1FFF";
 
 signal sigChangeStCnt : std_logic_vector(3 downto 0) := (others => '0');
 
@@ -135,8 +130,7 @@ begin
 	
 			elsif sigBtn_0_dbc = '1' and sigBtn_0_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + 5);
-					sigNum_01 <= std_logic_vector(unsigned(sigNum_01) + 13966);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + 13966);
 				elsif sigSelectedMode = NUM_1 then
 					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) + 327);
 				else
@@ -146,8 +140,7 @@ begin
 				sigBtn_0_BeingPressed <= '1';
 			elsif sigBtn_1_dbc = '1' and sigBtn_1_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - 5);
-					sigNum_01 <= std_logic_vector(unsigned(sigNum_01) - 13966);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - 13966);
 				elsif sigSelectedMode = NUM_1 then
 					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) - 327);
 				else
@@ -166,9 +159,7 @@ begin
 			end if;
 		end if;
 		num_0_o <= sigNum_0;
-		num_01_o <= sigNum_01;
 		num_1_o <= sigNum_1;
-		num_2_o <= (others => '0');
 		state_o <= sigState;
 		
 		

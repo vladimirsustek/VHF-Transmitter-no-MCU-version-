@@ -1,3 +1,4 @@
+*.sym
 /work
 !/work/*.bit
 !/work/*.mcs

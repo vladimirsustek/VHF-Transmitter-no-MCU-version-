@@ -31,8 +31,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity adc_interface is
     Port ( clk_i : in  STD_LOGIC;
+	        reset_i : in STD_LOGIC;
 	        clk_en_i : in STD_LOGIC;
-			  clk_lfc_i : in STD_LOGIC;
 			  miso_i : in STD_LOGIC;
 			  mosi_o : out STD_LOGIC;
 			  sclk_o : out STD_LOGIC;
@@ -73,9 +73,12 @@ signal sigSPI_RST : STD_LOGIC := '0';
 begin
 	
 
-	control_spi : process(clk_i)
+	control_spi : process(clk_i, reset_i)
 	begin
-		if rising_edge(clk_i) then
+		if reset_i = '1' then
+			sigSPI_St <= RESET;
+			sigSPI_Data_q <= (others => '0');
+		elsif rising_edge(clk_i) then
 			if sigSPI_St = RESET then
 				sigSPI_RST <= '0';
 				sigSPI_St <= CONVERSION;
