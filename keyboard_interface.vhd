@@ -58,6 +58,10 @@ architecture Behavioral of keyboard_interface is
 	
 	
 type adjust_type is (NONE, NUM_0, NUM_1, ADCDAC);
+
+constant constDDS_50kHzStep : integer := 14005;
+constant constDAC1_25mVStep : integer := 33;
+
 signal sigSelectedMode : adjust_type := ADCDAC;
 
 signal sigBtn_0_BeingPressed : std_logic := '0';
@@ -71,8 +75,9 @@ signal sigBtn_1_dbc : std_logic := '0';
 signal sigPrevCLK_LFC : std_logic := '0';
 
 
--- default phase increment equal to 21.10MHz when 120MHz clock and 25 phase (3.57Hz/LSB)
+-- default phase increment, equal to 21.10MHz when 120MHz clock and 25 phase (3.57Hz/LSB)
 signal sigNum_0 : std_logic_vector(24 downto 0) := "0010110100000011010110101";
+-- deafault DAC1 voltage value, equal to 625mV (when 16b DAC with 0xFFFF ~ 5V)
 signal sigNum_1 : std_logic_vector(15 downto 0) := X"1FFF";
 
 signal sigChangeStCnt : std_logic_vector(3 downto 0) := (others => '0');
@@ -113,15 +118,6 @@ begin
 						else
 							sigChangeStCnt <= std_logic_vector(unsigned(sigChangeStCnt) + 1);
 						end if;
---					when ADCDAC =>
---						if sigChangeStCnt = X"A" then
---							sigChangeStCnt <= X"0";
---							sigSelectedMode <= NONE;
---							sigState <= "00";
---							sigModeIsBeingSet <= '1';
---						else
---							sigChangeStCnt <= std_logic_vector(unsigned(sigChangeStCnt) + 1);
---						end if;
 					when others =>
 						sigChangeStCnt <= X"0";
 						sigSelectedMode <= NONE;
@@ -130,9 +126,9 @@ begin
 	
 			elsif sigBtn_0_dbc = '1' and sigBtn_0_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + 13966);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + constDDS_50kHzStep);
 				elsif sigSelectedMode = NUM_1 then
-					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) + 327);
+					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) + constDAC1_25mVStep);
 				else
 					sigNum_0 <= sigNum_0;
 					sigNum_1 <= sigNum_1;
@@ -140,9 +136,9 @@ begin
 				sigBtn_0_BeingPressed <= '1';
 			elsif sigBtn_1_dbc = '1' and sigBtn_1_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - 13966);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - constDDS_50kHzStep);
 				elsif sigSelectedMode = NUM_1 then
-					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) - 327);
+					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) - constDAC1_25mVStep);
 				else
 					sigNum_0 <= sigNum_0;
 					sigNum_1 <= sigNum_1;

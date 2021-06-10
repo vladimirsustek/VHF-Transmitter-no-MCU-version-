@@ -26,6 +26,10 @@ entity fm_transmitter is
 	 DAC0_CLK : out std_logic;
 	 DAC0_DATA : out std_logic_vector(9 downto 0);
 	 
+	 -- DAC1 inputs workaround (otherwise DAC1 failure)
+	 PORTD : in std_logic_vector(7 downto 6);
+	 PORTE : in std_logic_vector(0 downto 0);
+	 
 	 DAC1_NLDAC : out std_logic;
 	 DAC1_SCLK : out std_logic;
 	 DAC1_NCS : out std_logic;
