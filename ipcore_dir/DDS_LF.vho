@@ -67,9 +67,8 @@ COMPONENT DDS_LF
   PORT (
     ce : IN STD_LOGIC;
     clk : IN STD_LOGIC;
-    pinc_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-    rdy : OUT STD_LOGIC;
-    sine : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+    pinc_in : IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+    sine : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
   );
 END COMPONENT;
 -- COMP_TAG_END ------ End COMPONENT Declaration ------------
@@ -83,7 +82,6 @@ your_instance_name : DDS_LF
     ce => ce,
     clk => clk,
     pinc_in => pinc_in,
-    rdy => rdy,
     sine => sine
   );
 -- INST_TAG_END ------ End INSTANTIATION Template ------------

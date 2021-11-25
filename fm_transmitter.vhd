@@ -122,17 +122,18 @@ end fm_transmitter;
 	  PORT (
 		 ce : IN STD_LOGIC;
 		 clk : IN STD_LOGIC;
-		 pinc_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-		 rdy : OUT STD_LOGIC;
-		 sine : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+		 pinc_in : IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+		 sine : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
 	  );
 	END COMPONENT;
   ------------------------------------------------------------------------------
   
+  constant c19kHzOffset : std_logic_vector(12 downto 0) := "1010011001010";
   signal sigCentralReset : std_logic := '0';
   
   signal sigDDSphInc : std_logic_vector(24 downto 0) := (others => '0');
   signal sigDDSphIncPreset : std_logic_vector(24 downto 0) := (others => '0');
+  signal sigDDSpilotPhInc : std_logic_vector(24 downto 0) := (others => '0');
   signal sigManualVoltage : std_logic_vector(15 downto 0) := (others => '0');
   
   signal sigCLKBuff : std_logic := '0';
@@ -148,17 +149,26 @@ end fm_transmitter;
   signal sig230400Hz : std_logic := '0';
   signal sig22kHz : std_logic := '0';
   
-  signal sigDDSBeep : std_logic_vector(11 downto 0) := (others => '0');
-  signal sigDDSBeepInc : std_logic_vector(15 downto 0) := X"0001";
+  signal sigDDSPilot : std_logic_vector(6 downto 0) := (others => '0');
+  signal sigDDSMonoRpL : std_logic_vector(9 downto 0) := (others => '0');
     
   type adjust_type is (NONE, DDS_PHINC, DAC_1_VOLT);
   
   signal sigAdjustVariable : adjust_type := NONE;
 begin
 --------------------------------------------------------------------------------
+
+	DAC0_DATA <= std_logic_vector(unsigned(sigDDSMonoRpL) - shift_right(unsigned(sigDDSMonoRpL), 3) + unsigned(sigDDSPilot));
 	
+	LEDS(1 downto 0) <= sigKeyboardInterfaceState;		
+
 	sigNotClkHF <= not(sigClkHF);
+	
 	sigCentralReset <= SYS_NRST;
+	
+	sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 3) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 1) + 8);
+	
+	sigDDSpilotPhInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + unsigned(c19kHzOffset));
 	
 	device_state : process(SYS_NRST, CLK_LFC)
 	begin
@@ -170,22 +180,7 @@ begin
 			LEDS(3) <= CLK_LFC;
 		end if;
 	end process;
-	LEDS(1 downto 0) <= sigKeyboardInterfaceState;		
-	
-	toggle_frequency : process(CLK_LFC)
-	begin
-		if rising_edge(CLK_LFC) then
-			if sigDDSBeepInc /= X"0040" then
-				sigDDSBeepInc <= std_logic_vector(shift_left(unsigned(sigDDSBeepInc), 1));
-			else
-				sigDDSBeepInc <= X"0001";
-			end if;
-		end if;
-	end process;
-	
-	sigDDSphInc <= std_logic_vector(unsigned(sigDDSphIncPreset) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 3) + shift_left((unsigned(sigADCaudio_0) + unsigned(sigADCaudio_1)), 1) + 8);
-
-	
+		
 	  CLK_conversion : ClockUp
   port map
    (-- Clock in ports
@@ -206,13 +201,21 @@ begin
 	 clk_en_22kHz_o => sig22kHz
 	);
 	
-	DAC0_DATA_O : DDS_RF
+	MONO_RplusR : DDS_RF
   PORT MAP (
     ce => not(sigCentralReset),
     clk => sigClkHF,
     pinc_in => sigDDSphInc,
     rdy => open,
-    sine => DAC0_DATA
+    sine => sigDDSMonoRpL
+  );
+  
+  	Pilot : DDS_LF
+  PORT MAP (
+    ce => not(sigCentralReset),
+    clk => sigCLKBuff,
+    pinc_in => sigDDSpilotPhInc,
+    sine => sigDDSPilot
   );
   
 	DA0_CLK_O : ODDR2
@@ -276,14 +279,6 @@ begin
 		state_o => sigKeyboardInterfaceState 
 	);
 		
-	DemoBeepSound : DDS_LF
-  PORT MAP (
-    ce => not(sigCentralReset),
-    clk => sigCLKBuff,
-    pinc_in => sigDDSBeepInc,
-    rdy => open,
-    sine => sigDDSBeep
-  );
   
 --------------------------------------------------------------------------------
 end Behavioral;

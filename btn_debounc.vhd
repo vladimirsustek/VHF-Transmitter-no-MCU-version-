@@ -31,7 +31,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity btn_debounc is
     Port ( clk_i : in  STD_LOGIC;
-			  reset_i : in STD_LOGIC;
+		   reset_i : in STD_LOGIC;
            clk_en_i : in  STD_LOGIC;
            btn_i : in  STD_LOGIC;
            sig_o : out  STD_LOGIC);

@@ -26,10 +26,7 @@
 <msg type="warning" file="HDLCompiler" num="321" delta="old" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\xbip_utils_v2_0\bip_utils_pkg_v2_0.vhd" Line 1852: Comparison between arrays of unequal length always returns <arg fmt="%s" index="1">FALSE</arg>.
 </msg>
 
-<msg type="warning" file="HDLCompiler" num="746" delta="old" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\dds_compiler_v4_0_xst.vhd" Line 218: Range is empty (null range)
-</msg>
-
-<msg type="warning" file="HDLCompiler" num="871" delta="new" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\dds_compiler_v4_0_xst.vhd" Line 265: Using initial value <arg fmt="%s" index="1">&quot;000000000000&quot;</arg> for <arg fmt="%s" index="2">dummy_d</arg> since it is never assigned
+<msg type="warning" file="HDLCompiler" num="871" delta="new" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\dds_compiler_v4_0_xst.vhd" Line 265: Using initial value <arg fmt="%s" index="1">&quot;0000000&quot;</arg> for <arg fmt="%s" index="2">dummy_d</arg> since it is never assigned
 </msg>
 
 <msg type="warning" file="HDLCompiler" num="746" delta="old" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\xbip_pipe_v2_0\xbip_pipe_v2_0_xst.vhd" Line 207: Range is empty (null range)
@@ -39,9 +36,6 @@
 </msg>
 
 <msg type="warning" file="HDLCompiler" num="1127" delta="old" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\sin_cos.vhd" Line 459: Assignment to <arg fmt="%s" index="1">dummy</arg> ignored, since the identifier is never used
-</msg>
-
-<msg type="warning" file="HDLCompiler" num="634" delta="new" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\sin_cos.vhd" Line 384: Net &lt;<arg fmt="%s" index="1">mod_cos_addr[9]</arg>&gt; does not have a driver.
 </msg>
 
 <msg type="warning" file="HDLCompiler" num="634" delta="old" >"C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\dds_compiler_v4_0_xst.vhd" Line 233: Net &lt;<arg fmt="%s" index="1">sclr_i</arg>&gt; does not have a driver.
@@ -62,16 +56,19 @@
 <msg type="warning" file="Xst" num="2972" delta="old" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\dds_compiler_v4_0\dds_compiler_v4_0_xst.vhd</arg>&quot; line <arg fmt="%d" index="2">1168</arg>. All outputs of instance &lt;<arg fmt="%s" index="3">I_SINCOS.i_final_cos</arg>&gt; of block &lt;<arg fmt="%s" index="4">xbip_pipe_v2_0_xst</arg>&gt; are unconnected in block &lt;<arg fmt="%s" index="5">dds_compiler_v4_0_xst</arg>&gt;. Underlying logic will be removed.
 </msg>
 
-<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">134</arg>: Output port &lt;<arg fmt="%s" index="3">channel</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
+<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">132</arg>: Output port &lt;<arg fmt="%s" index="3">channel</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
 </msg>
 
-<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">134</arg>: Output port &lt;<arg fmt="%s" index="3">cosine</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
+<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">132</arg>: Output port &lt;<arg fmt="%s" index="3">cosine</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
 </msg>
 
-<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">134</arg>: Output port &lt;<arg fmt="%s" index="3">phase_out</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
+<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">132</arg>: Output port &lt;<arg fmt="%s" index="3">phase_out</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
 </msg>
 
-<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">134</arg>: Output port &lt;<arg fmt="%s" index="3">rfd</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
+<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">132</arg>: Output port &lt;<arg fmt="%s" index="3">rdy</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
+</msg>
+
+<msg type="info" file="Xst" num="3210" delta="new" >&quot;<arg fmt="%s" index="1">C:\VHF-FM-Transmitter\ipcore_dir\tmp\_cg\_dbg\DDS_LF.vhd</arg>&quot; line <arg fmt="%s" index="2">132</arg>: Output port &lt;<arg fmt="%s" index="3">rfd</arg>&gt; of the instance &lt;<arg fmt="%s" index="4">U0</arg>&gt; is unconnected or connected to loadless signal.
 </msg>
 
 <msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">ADDR</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
@@ -114,6 +111,9 @@
 </msg>
 
 <msg type="warning" file="Xst" num="2935" delta="old" >Signal &apos;<arg fmt="%s" index="1">chan_addr_del3</arg>&apos;, unconnected in block &apos;<arg fmt="%s" index="2">dds_compiler_v4_0_xst</arg>&apos;, is tied to its initial value (<arg fmt="%s" index="3">0</arg>).
+</msg>
+
+<msg type="warning" file="Xst" num="653" delta="new" >Signal &lt;<arg fmt="%s" index="1">RDY</arg>&gt; is used but never assigned. This sourceless signal will be automatically connected to value <arg fmt="%s" index="2">GND</arg>.
 </msg>
 
 <msg type="warning" file="Xst" num="653" delta="old" >Signal &lt;<arg fmt="%s" index="1">RFD</arg>&gt; is used but never assigned. This sourceless signal will be automatically connected to value <arg fmt="%s" index="2">GND</arg>.
@@ -179,19 +179,22 @@
 <msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">SINIT</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
-<msg type="warning" file="Xst" num="647" delta="new" >Input &lt;<arg fmt="%s" index="1">DUMMY_D&lt;11:11&gt;</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+<msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">SCLR</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+</msg>
+
+<msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">CLK</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+</msg>
+
+<msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">CE</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
 <msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">SCLR</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
-<msg type="warning" file="Xst" num="2935" delta="new" >Signal &apos;<arg fmt="%s" index="1">mod_cos_addr</arg>&apos;, unconnected in block &apos;<arg fmt="%s" index="2">sin_cos</arg>&apos;, is tied to its initial value (<arg fmt="%s" index="3">0000000000</arg>).
+<msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">SSET</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
-<msg type="info" file="Xst" num="2774" delta="old" >HDL ADVISOR - <arg fmt="%s" index="1">KEEP</arg> <arg fmt="%s" index="2">property</arg> attached to signal <arg fmt="%s" index="3">opt_has_pipe.first_q</arg> may hinder XST clustering optimizations.
-</msg>
-
-<msg type="info" file="Xst" num="2774" delta="old" >HDL ADVISOR - <arg fmt="%s" index="1">KEEP</arg> <arg fmt="%s" index="2">property</arg> attached to signal <arg fmt="%s" index="3">opt_has_pipe.first_q</arg> may hinder XST clustering optimizations.
+<msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">SINIT</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 </msg>
 
 <msg type="warning" file="Xst" num="647" delta="old" >Input &lt;<arg fmt="%s" index="1">CLK</arg>&gt; is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
@@ -226,40 +229,7 @@
 
 <msg type="info" file="Xst" num="3226" delta="old" >The RAM &lt;<arg fmt="%s" index="1">Mram_sin_cos_lut</arg>&gt; will be implemented as a BLOCK RAM, absorbing the following register(s):</msg>
 
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_11</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_10</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_9</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_8</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_7</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_5</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_3</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_2</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="new" >Node &lt;<arg fmt="%s" index="1">U0/i_synth/I_SINCOS.i_rom/i_rtl.i_quarter_table.i_trivial_map.i_op_reg_b/opt_has_pipe.pipe_2_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">DDS_LF</arg>&gt;.
+<msg type="info" file="Xst" num="2774" delta="old" >HDL ADVISOR - <arg fmt="%s" index="1">KEEP</arg> <arg fmt="%s" index="2">property</arg> attached to signal <arg fmt="%s" index="3">opt_has_pipe.first_q</arg> may hinder XST clustering optimizations.
 </msg>
 
 <msg type="info" file="Xst" num="2169" delta="old" >HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.

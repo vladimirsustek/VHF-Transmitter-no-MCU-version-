@@ -1,0 +1,8 @@
+INTSTYLE=impact
+INFILE=C:\VHF-FM-Transmitter\impact.xsl
+OUTFILE=C:\VHF-FM-Transmitter\impact.xsl
+FAMILY=Single
+PART=Single
+WORKINGDIR=C:\VHF-FM-Transmitter
+LICENSE=iMPACT
+USER_INFO=iMPACT

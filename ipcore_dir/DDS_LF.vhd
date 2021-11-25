@@ -44,9 +44,8 @@ ENTITY DDS_LF IS
   PORT (
     ce : IN STD_LOGIC;
     clk : IN STD_LOGIC;
-    pinc_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-    rdy : OUT STD_LOGIC;
-    sine : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+    pinc_in : IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+    sine : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
   );
 END DDS_LF;
 
@@ -56,23 +55,22 @@ COMPONENT wrapped_DDS_LF
   PORT (
     ce : IN STD_LOGIC;
     clk : IN STD_LOGIC;
-    pinc_in : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-    rdy : OUT STD_LOGIC;
-    sine : OUT STD_LOGIC_VECTOR(11 DOWNTO 0)
+    pinc_in : IN STD_LOGIC_VECTOR(24 DOWNTO 0);
+    sine : OUT STD_LOGIC_VECTOR(6 DOWNTO 0)
   );
 END COMPONENT;
 
 -- Configuration specification
   FOR ALL : wrapped_DDS_LF USE ENTITY XilinxCoreLib.dds_compiler_v4_0(behavioral)
     GENERIC MAP (
-      c_accumulator_width => 16,
+      c_accumulator_width => 25,
       c_amplitude => 0,
       c_channels => 1,
       c_has_ce => 1,
       c_has_channel_index => 0,
       c_has_phase_out => 0,
       c_has_phasegen => 1,
-      c_has_rdy => 1,
+      c_has_rdy => 0,
       c_has_rfd => 0,
       c_has_sclr => 0,
       c_has_sincos => 1,
@@ -82,9 +80,9 @@ END COMPONENT;
       c_negative_sine => 0,
       c_noise_shaping => 0,
       c_optimise_goal => 0,
-      c_output_width => 12,
+      c_output_width => 7,
       c_outputs_required => 0,
-      c_phase_angle_width => 12,
+      c_phase_angle_width => 7,
       c_phase_increment => 3,
       c_phase_increment_value => "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
       c_phase_offset => 0,
@@ -101,7 +99,6 @@ U0 : wrapped_DDS_LF
     ce => ce,
     clk => clk,
     pinc_in => pinc_in,
-    rdy => rdy,
     sine => sine
   );
 -- synthesis translate_on

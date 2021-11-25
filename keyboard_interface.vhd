@@ -57,12 +57,11 @@ architecture Behavioral of keyboard_interface is
 	END COMPONENT;
 	
 	
-type adjust_type is (NONE, NUM_0, NUM_1, ADCDAC);
+type adjust_type is (NONE, NUM_0, NUM_1);
 
-constant constDDS_50kHzStep : integer := 14005;
+constant constDDS_25kHzStep : integer := 7003;
 constant constDAC1_25mVStep : integer := 33;
 
-signal sigSelectedMode : adjust_type := ADCDAC;
 
 signal sigBtn_0_BeingPressed : std_logic := '0';
 signal sigBtn_1_BeingPressed : std_logic := '0';
@@ -75,14 +74,13 @@ signal sigBtn_1_dbc : std_logic := '0';
 signal sigPrevCLK_LFC : std_logic := '0';
 
 
--- default phase increment, equal to 21.10MHz when 120MHz clock and 25 phase (3.57Hz/LSB)
+-- default phase increment, equal to 21.10MHz when 120MHz clock and 25b phase (3.57Hz/LSB)
 signal sigNum_0 : std_logic_vector(24 downto 0) := "0010110100000011010110101";
 -- deafault DAC1 voltage value, equal to 625mV (when 16b DAC with 0xFFFF ~ 5V)
 signal sigNum_1 : std_logic_vector(15 downto 0) := X"1FFF";
-
 signal sigChangeStCnt : std_logic_vector(3 downto 0) := (others => '0');
-
-signal sigState : std_logic_vector(1 downto 0) := "11";
+signal sigState : std_logic_vector(1 downto 0) := "10";
+signal sigSelectedMode : adjust_type := NUM_0;
 
 begin
 	
@@ -126,7 +124,7 @@ begin
 	
 			elsif sigBtn_0_dbc = '1' and sigBtn_0_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + constDDS_50kHzStep);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) + constDDS_25kHzStep);
 				elsif sigSelectedMode = NUM_1 then
 					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) + constDAC1_25mVStep);
 				else
@@ -136,7 +134,7 @@ begin
 				sigBtn_0_BeingPressed <= '1';
 			elsif sigBtn_1_dbc = '1' and sigBtn_1_BeingPressed = '0' then
 				if sigSelectedMode = NUM_0 then
-					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - constDDS_50kHzStep);
+					sigNum_0 <= std_logic_vector(unsigned(sigNum_0) - constDDS_25kHzStep);
 				elsif sigSelectedMode = NUM_1 then
 					sigNum_1 <= std_logic_vector(unsigned(sigNum_1) - constDAC1_25mVStep);
 				else
